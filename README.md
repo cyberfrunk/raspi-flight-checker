@@ -47,12 +47,12 @@ Please create your own MP3 files and place them in `/home/pi/`:
 
 This project relies on a daily email containing flight information.
 
-The system extracts callsigns from a PDF attachment (e.g. "Document.pdf") using OCR.
+The system extracts callsigns from a PDF attachment "Document.pdf" using OCR.
 
 ⚠️ Important:
-- The email must be sent daily
+- The email must be sent at check-in
 - It must contain a PDF attachment with flight data
-- The subject should contain something like "Daily"
+- The subject should be  "Daily"
 
 Without this email, no callsigns will be detected and flight tracking will not work.
 

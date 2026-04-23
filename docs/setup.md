@@ -1,3 +1,5 @@
+<!-- refresh -->
+
 # Raspberry Pi Eurowings Flug-Checker – Handbuch
 
 Dieses Dokument beschreibt den kompletten Aufbau und Betrieb des Eurowings-Flug-Checkers.  

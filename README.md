@@ -2,6 +2,12 @@
 
 Automated tracking of flights using ADS-B, calendar data and OpenSky.
 
+### How it works
+
+- Daily email → contains PDF with flight plan
+- OCR extracts callsigns
+- Callsigns are tracked via ADS-B / OpenSky
+
 ## Features
 
 - ADS-B tracking (dump1090)
@@ -36,6 +42,19 @@ Please create your own MP3 files and place them in `/home/pi/`:
 - overflight_alert.mp3
 - landing_day.mp3
 - landing_night.mp3
+
+## Daily Mail Requirement
+
+This project relies on a daily email containing flight information.
+
+The system extracts callsigns from a PDF attachment (e.g. "Document.pdf") using OCR.
+
+⚠️ Important:
+- The email must be sent daily
+- It must contain a PDF attachment with flight data
+- The subject should contain something like "Daily"
+
+Without this email, no callsigns will be detected and flight tracking will not work.
 
 ## Documentation
 

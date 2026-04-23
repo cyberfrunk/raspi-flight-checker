@@ -1,0 +1,14 @@
+[Unit]
+Description=Simple HTTP Server for Sonos MP3 files
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi
+ExecStart=/usr/bin/python3 -m http.server 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,68 +1,177 @@
 # ✈️ Flight Checker (Raspberry Pi)
 
-Automated tracking of flights using ADS-B, calendar data and OpenSky.
+Personal flight tracking system for pilots using ADS-B, OpenSky and roster emails.
 
-### How it works
+---
 
-- Daily email → contains PDF with flight plan
-- OCR extracts callsigns
-- Callsigns are tracked via ADS-B / OpenSky
+## 🧠 What it does
 
-## Features
+This project automatically tracks **your own flights** and notifies you when:
 
-- ADS-B tracking (dump1090)
-- Flight matching via callsigns
-- Overflight detection
-- Landing detection (OpenSky)
-- Sonos audio alerts
-- Smart light integration
-- Mail parsing (PDF + OCR)
+* ✈️ your aircraft is flying near your home
+* 🛫 your flight is active
+* 🛬 you have landed
 
-## Setup
+It combines multiple data sources:
 
-1. Clone repository
+* 📡 ADS-B (dump1090)
+* 🌍 OpenSky Network
+* 📅 Calendar (ICS)
+* ✉️ Daily roster email (PDF + OCR)
 
-2. Create config:
-   cp .flugchecker_config.example .flugchecker_config
+---
 
-3. Edit config and fill in your values
+## 🔥 Features
 
-4. Install dependencies:
-   pip install -r requirements.txt
+* Callsign extraction from email (PDF + OCR)
+* Live tracking via ADS-B + OpenSky
+* Overflight detection (distance-based)
+* Smart landing detection (speed + altitude logic)
+* Sonos audio alerts
+* Smart light (HomePilot) integration
+* Automatic daily operation via systemd
 
-5. Start:
-   python3 flug_checker.py
+---
 
-## Audio Setup
+## 🏗️ System Overview
 
-This project does not include any audio files.
+```
+Mail (PDF) → OCR → Callsigns
+                     ↓
+            ADS-B (dump1090)
+                     ↓
+               Flight Checker
+                     ↓
+        OpenSky (landing detection)
+                     ↓
+        🔊 Sonos + 💡 Smart Light
+```
 
-Please create your own MP3 files and place them in `/home/pi/`:
+---
 
-- overflight_alert.mp3
-- landing_day.mp3
-- landing_night.mp3
+## ⚙️ Setup
 
-## Daily Mail Requirement
+### 1. Clone repository
 
-This project relies on a daily email containing flight information.
+```bash
+git clone https://github.com/cyberfrunk/raspi-flight-checker.git
+cd raspi-flight-checker
+```
 
-The system extracts callsigns from a PDF attachment "Document.pdf" using OCR.
+---
 
-⚠️ Important:
-- The email must be sent at check-in
-- It must contain a PDF attachment with flight data
-- The subject should be  "Daily"
+### 2. Create config
 
-Without this email, no callsigns will be detected and flight tracking will not work.
+```bash
+cp .flugchecker_config.example .flugchecker_config
+nano .flugchecker_config
+```
 
-## Documentation
+Fill in your credentials (mail, OpenSky, location, etc.)
+
+---
+
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+### 4. Install system dependencies
+
+```bash
+sudo apt install dump1090-mutability tesseract-ocr poppler-utils
+```
+
+---
+
+### 5. Start manually (test)
+
+```bash
+python3 flug_checker.py
+```
+
+---
+
+## 🔧 Autostart (systemd)
+
+Service files are included in `/systemd`.
+
+Install:
+
+```bash
+sudo cp systemd/*.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable flugchecker
+sudo systemctl enable flug-http
+sudo systemctl start flugchecker
+```
+
+---
+
+## 🔊 Audio Setup
+
+Create your own audio files:
+
+```plaintext
+/home/pi/overflight_alert.mp3
+/home/pi/landing_day.mp3
+/home/pi/landing_night.mp3
+```
+
+---
+
+## ✉️ Mail Requirement
+
+The system depends on a **daily email**:
+
+* Subject: `Daily`
+* Contains PDF attachment (`Document.pdf`)
+* Includes flight information
+
+⚠️ Without this email → no tracking
+
+---
+
+## 📂 Project Structure
+
+```
+.
+├── flug_checker.py
+├── requirements.txt
+├── systemd/
+├── docs/
+└── README.md
+```
+
+---
+
+## 📖 Documentation
 
 Full setup guide:
 
-- docs/setup.md
+👉 docs/setup.md
 
-## Notes
+---
 
-- Audio files are excluded due to copyright reasons
-- Configuration file is not included for security reasons
+## 🔐 Security Notes
+
+* Config file is excluded (`.flugchecker_config`)
+* No credentials are stored in the repository
+* Audio files are not included
+
+---
+
+## 🛠️ Future Ideas
+
+* Web dashboard (live map)
+* Telegram notifications
+* Flight statistics
+
+---
+
+## 👨‍✈️ Author
+
+Built for personal flight awareness.

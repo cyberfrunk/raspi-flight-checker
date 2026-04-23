@@ -37,7 +37,7 @@ def load_config():
         for line in f:
             if "=" in line:
                 key, value = line.strip().split("=", 1)
-                config[key] = value
+                config[key.strip()] = value.strip().strip('"').strip("'")
 
     # Pflichtfelder prüfen
     required_keys = ["ICS_URL"]

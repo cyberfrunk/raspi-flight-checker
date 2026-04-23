@@ -37,6 +37,12 @@ Please create your own MP3 files and place them in `/home/pi/`:
 - landing_day.mp3
 - landing_night.mp3
 
+## Documentation
+
+Full setup guide:
+
+- docs/setup.md
+
 ## Notes
 
 - Audio files are excluded due to copyright reasons

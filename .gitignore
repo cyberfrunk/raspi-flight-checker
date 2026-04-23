@@ -1,0 +1,6 @@
+.flugchecker_config
+__pycache__/
+*.log
+callsigns.json
+*.mp3
+Document.pdf

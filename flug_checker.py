@@ -762,59 +762,59 @@ def main():
                 # Distanz berechnen hast du schon:
                 # dist = distance_km(...)
 
-                # 🔥 initialisieren
+                # 🔥 INITIAL
                 if ew not in min_distances:
                     min_distances[ew] = dist
-                    continue
 
-                # 🔥 wird er näher?
+                # 🔥 IMMER Minimum aktualisieren
                 if dist < min_distances[ew]:
                     min_distances[ew] = dist
-                    continue
 
-                # 🔥 wird er wieder weiter weg → MINIMUM erreicht!
-                min_dist = min_distances[ew]
+                # 🔥 CHECK: entfernt sich → Minimum erreicht
+                if dist > min_distances[ew] + 1:
 
-                # 👉 nur reagieren, wenn innerhalb Info-Radius
-                if min_dist <= INFO_RADIUS_KM:
+                    min_dist = min_distances[ew]
 
-                    logger.info(
-                        f"✈️ CLOSEST APPROACH: {flight} MIN_DIST {min_dist:.1f} km (jetzt {dist:.1f})"
-                    )
+                    # 👉 nur reagieren, wenn innerhalb Info-Radius
+                    if min_dist <= INFO_RADIUS_KM:
 
-                    now_ts = time.time()
+                        logger.info(
+                            f"✈️ CLOSEST APPROACH: {flight} MIN_DIST {min_dist:.1f} km (jetzt {dist:.1f})"
+                        )
 
-                    if flight in last_alert:
-                        if now_ts - last_alert[flight] < ALERT_COOLDOWN:
-                            continue
+                        now_ts = time.time()
 
-                    last_alert[flight] = now_ts
+                        if flight in last_alert:
+                            if now_ts - last_alert[flight] < ALERT_COOLDOWN:
+                                continue
 
-                    # 🔥 ENTSCHEIDUNG: Nähe oder Überflug
-                    is_overflight = min_dist <= RADIUS_KM
+                        last_alert[flight] = now_ts
 
-                    # 🔥 NUR EINE MAIL
-                    if is_overflight:
-                        subject = f"✈️ {ew} UEBERFLUG"
-                        text = f"Min Distanz: {min_dist:.1f} km\n➡️ UEBERFLUG!"
-                    else:
-                        subject = f"✈️ {ew} Nähe"
-                        text = f"Min Distanz: {min_dist:.1f} km\nJetzt: {dist:.1f} km"
+                        # 🔥 ENTSCHEIDUNG: Nähe oder Überflug
+                        is_overflight = min_dist <= RADIUS_KM
 
-                    send_mail(subject, text, [MY_MAIL])
+                        # 🔥 NUR EINE MAIL
+                        if is_overflight:
+                            subject = f"✈️ {ew} UEBERFLUG"
+                            text = f"Min Distanz: {min_dist:.1f} km\n➡️ UEBERFLUG!"
+                        else:
+                            subject = f"✈️ {ew} Nähe"
+                            text = f"Min Distanz: {min_dist:.1f} km\nJetzt: {dist:.1f} km"
 
-                    # 🚨 Aktionen nur bei echtem Überflug
-                    if is_overflight:
+                        send_mail(subject, text, [MY_MAIL])
 
-                        threading.Thread(target=sonos_play, args=(MP3_OVERFLIGHT,)).start()
-                        threading.Thread(target=lamp_eurowings).start()
+                        # 🚨 Aktionen nur bei echtem Überflug
+                        if is_overflight:
 
-                        if icao24:
-                            tracked_icao = icao24
-                            tracked_callsign = flight
-                            logger.info(f"TRACKING ICAO24: {tracked_icao} ({tracked_callsign})")
+                            threading.Thread(target=sonos_play, args=(MP3_OVERFLIGHT,)).start()
+                            threading.Thread(target=lamp_eurowings).start()
 
-                    overflight_triggered.add(ew)
+                            if icao24:
+                                tracked_icao = icao24
+                                tracked_callsign = flight
+                                logger.info(f"TRACKING ICAO24: {tracked_icao} ({tracked_callsign})")
+
+                        overflight_triggered.add(ew)
 
             # ================= OPENSKY LANDING =================
 

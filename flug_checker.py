@@ -19,7 +19,7 @@ import threading
 import smtplib
 from email.mime.text import MIMEText
 import sys
-# TEST TOKEN
+
 # ================= CONFIG =================
 
 def load_config():
